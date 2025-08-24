@@ -1,0 +1,4 @@
+kernel.elf
+kernel.bin
+boot.o
+target/
