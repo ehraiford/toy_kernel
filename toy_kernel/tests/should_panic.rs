@@ -2,10 +2,11 @@
 #![no_main]
 
 use core::panic::PanicInfo;
-use toy_kernel::{QemuExitCode, exit_qemu, serial_println};
+use toy_kernel::{QemuExitCode, exit_qemu, init, serial_println};
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
+    init();
     should_fail();
     serial_println!("[test did not panic]");
     exit_qemu(QemuExitCode::Failed);

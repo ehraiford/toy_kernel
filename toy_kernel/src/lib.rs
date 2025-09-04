@@ -2,16 +2,22 @@
 #![no_main]
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
+#![feature(abi_x86_interrupt)]
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
 
+pub mod interrupt;
 pub mod serial;
 pub mod vga_buffer;
+
+pub fn init() {
+    interrupt::init_idt();
+}
+
 pub trait Testable {
     fn run(&self) -> ();
 }
-
 impl<T> Testable for T
 where
     T: Fn(),
@@ -42,6 +48,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 #[cfg(test)]
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
+    init();
     test_main();
     loop {}
 }
